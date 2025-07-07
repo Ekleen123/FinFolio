@@ -12,8 +12,9 @@ import {
   Legend
 } from "recharts";
 
+
 // Replace with your actual Alpha Vantage API key
-const ALPHA_VANTAGE_API_KEY = "yZMMXFRUCEV6AKB0S";
+const ALPHA_VANTAGE_API_KEY = "process.env.REACT_APP_API_KEY;";
 
 
 import { useNavigate } from "react-router-dom";
