@@ -5,6 +5,8 @@ import StockSearch from "./components/StockSearch";
 import Dashboard from "./components/Dashboard";
 import ErrorBoundary from "./components/ErrorBoundary";
 import PortfolioReturns from "./components/PortfolioReturns";
+// import Alerts from "./components/Alerts"; // Uncomment if you want to use Alerts component
+
 const App = () => {
   return (
     <Router>

@@ -19,6 +19,8 @@ app.use('/api/auth', authRoutes);
 const portfolioRoutes = require('./routes/portfolio');
 app.use('/api/portfolio', portfolioRoutes);
 
+const watchlistRoutes = require('./routes/watchlist');
+app.use('/api/watchlist', watchlistRoutes);
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })

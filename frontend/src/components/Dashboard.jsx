@@ -16,6 +16,7 @@ import {
 import ThemeToggle from "./ThemeToggle";
 import StockSearch from "./StockSearch"; 
 import Watchlist from "./Watchlist";
+import Alerts from "./Alerts";
 // You can create Portfolio, Alerts, Watchlist, Profile components similarly
 
 
@@ -85,6 +86,8 @@ export default function Dashboard() {
   const Portfolio = () => <PortfolioHoldings userId={user._id} />;
 
   const Alerts = () => <div className="text-center text-xl py-20">Alerts Feature Coming Soon</div>;
+ 
+  // const Alerts = () => <div className="text-center text-xl py-20">Alerts Feature Coming Soon</div>;
   // const Watchlist = () => <div className="text-center text-xl py-20">Watchlist Feature Coming Soon</div>;
   const Profile = () => <div className="text-center text-xl py-20">Profile Feature Coming Soon</div>;
 

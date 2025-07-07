@@ -118,7 +118,7 @@ const Watchlist = () => {
     }, 5000); // Update every 5 seconds
 
     return () => clearInterval(interval);
-  });
+  }, []);
 
   const filteredStocks = getFilteredStocks();
 
