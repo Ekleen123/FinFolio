@@ -50,7 +50,7 @@ const PortfolioHoldings = () => {
       setLoading(false);
     };
     fetchPrices();
-    // eslint-disable-next-line
+ 
   }, [holdings]);
 
   // Calculate total investment

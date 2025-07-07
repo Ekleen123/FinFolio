@@ -7,7 +7,7 @@ import {
   BellAlertIcon,
   UserIcon,
   StarIcon,
-  MagnifyingGlassIcon,che
+  MagnifyingGlassIcon,
   ArrowRightOnRectangleIcon,
   ChevronDoubleLeftIcon,
   ChevronDoubleRightIcon,
@@ -15,6 +15,7 @@ import {
 } from "@heroicons/react/24/outline";
 import ThemeToggle from "./ThemeToggle";
 import StockSearch from "./StockSearch"; 
+import Watchlist from "./Watchlist";
 // You can create Portfolio, Alerts, Watchlist, Profile components similarly
 
 
@@ -84,7 +85,7 @@ export default function Dashboard() {
   const Portfolio = () => <PortfolioHoldings userId={user._id} />;
 
   const Alerts = () => <div className="text-center text-xl py-20">Alerts Feature Coming Soon</div>;
-  const Watchlist = () => <div className="text-center text-xl py-20">Watchlist Feature Coming Soon</div>;
+  // const Watchlist = () => <div className="text-center text-xl py-20">Watchlist Feature Coming Soon</div>;
   const Profile = () => <div className="text-center text-xl py-20">Profile Feature Coming Soon</div>;
 
   // Main content renderer
