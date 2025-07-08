@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import holdingsData from "./holdings.json"; // Adjust path as needed
 import axios from "axios";
 import {
   LineChart,
@@ -12,22 +11,128 @@ import {
   Legend
 } from "recharts";
 
+// Modal for adding a holding
+const AddHoldingModal = ({ show, onClose, onAdd, userId }) => {
+  const [symbol, setSymbol] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [purchasePrice, setPurchasePrice] = useState("");
+  const [error, setError] = useState("");
 
-// Replace with your actual Alpha Vantage API key
-const ALPHA_VANTAGE_API_KEY = "process.env.REACT_APP_API_KEY;";
+  // Example stock options; in a real app, fetch from backend or API
+  const stockOptions = [
+    "TCS.BSE",
+    "INFY.BSE",
+    "RELIANCE.BSE",
+    "HDFCBANK.BSE"
+  ];
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!symbol || !quantity || !purchasePrice) {
+      setError("All fields are required");
+      return;
+    }
+    try {
+      await axios.post(`/api/portfolio/${userId}/holdings`, {
+        symbol,
+        quantity: Number(quantity),
+        purchasePrice: Number(purchasePrice),
+      });
+      onAdd(); // Refresh holdings in parent
+      onClose();
+      setSymbol("");
+      setQuantity("");
+      setPurchasePrice("");
+      setError("");
+    } catch {
+      setError("Failed to add holding");
+    }
+  };
 
-import { useNavigate } from "react-router-dom";
+  if (!show) return null;
 
-const PortfolioHoldings = () => {
-  const [holdings, setHoldings] = useState(holdingsData);
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
+        <h2 className="text-xl font-bold mb-4">Add Holding</h2>
+        <form onSubmit={handleSubmit}>
+          <label className="block mb-2">Stock Symbol</label>
+          <select
+            className="w-full mb-4 p-2 border rounded"
+            value={symbol}
+            onChange={(e) => setSymbol(e.target.value)}
+          >
+            <option value="">Select a stock</option>
+            {stockOptions.map((s) => (
+              <option key={s} value={s}>{s}</option>
+            ))}
+          </select>
+          <label className="block mb-2">Quantity</label>
+          <input
+            type="number"
+            className="w-full mb-4 p-2 border rounded"
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
+          />
+          <label className="block mb-2">Purchase Price</label>
+          <input
+            type="number"
+            className="w-full mb-4 p-2 border rounded"
+            value={purchasePrice}
+            onChange={(e) => setPurchasePrice(e.target.value)}
+          />
+          {error && <div className="text-red-600 mb-2">{error}</div>}
+          <div className="flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="bg-gray-300 px-4 py-2 rounded"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="bg-green-600 text-white px-4 py-2 rounded"
+            >
+              Add
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+const ALPHA_VANTAGE_API_KEY = "YOUR_ALPHA_VANTAGE_API_KEY"; // Replace with your key
+
+const PortfolioHoldings = ({ userId }) => {
+  const [holdings, setHoldings] = useState([]);
   const [prices, setPrices] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
+
+  // Fetch holdings from backend
+  const fetchHoldings = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await axios.get(`/api/portfolio/${userId}/holdings`);
+      setHoldings(res.data.holdings || []);
+    } catch (err) {
+      setError("Failed to fetch holdings",err);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchHoldings();
+    // eslint-disable-next-line
+  }, [userId]);
 
   // Fetch current prices for all holdings
   useEffect(() => {
+    if (!holdings.length) return;
     const fetchPrices = async () => {
       setLoading(true);
       setError("");
@@ -50,7 +155,7 @@ const PortfolioHoldings = () => {
       setLoading(false);
     };
     fetchPrices();
- 
+   
   }, [holdings]);
 
   // Calculate total investment
@@ -59,9 +164,14 @@ const PortfolioHoldings = () => {
     0
   );
 
-  // Sell handler
-  const handleSell = (symbol) => {
-    setHoldings(holdings.filter((h) => h.symbol !== symbol));
+  // Sell handler (call backend to remove, then refetch)
+  const handleSell = async (symbol) => {
+    try {
+      await axios.delete(`/api/portfolio/${userId}/holdings/${symbol}`);
+      fetchHoldings();
+    } catch {
+      setError("Failed to sell holding");
+    }
   };
 
   // Prepare data for the line chart
@@ -158,7 +268,7 @@ const PortfolioHoldings = () => {
         </table>
         {/* Add Holding Button at the bottom */}
         <button
-          onClick={() => navigate("/stock-search")}
+          onClick={() => setShowModal(true)}
           className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-bold px-4 py-3 rounded text-lg transition"
         >
           + Add Holding
@@ -183,8 +293,16 @@ const PortfolioHoldings = () => {
           </ResponsiveContainer>
         </div>
       </div>
+      {/* Add Holding Modal */}
+      <AddHoldingModal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        onAdd={fetchHoldings}
+        userId={userId}
+      />
     </div>
   );
 };
 
 export default PortfolioHoldings;
+
