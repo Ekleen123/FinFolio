@@ -305,4 +305,3 @@ const PortfolioHoldings = ({ userId }) => {
 };
 
 export default PortfolioHoldings;
-
