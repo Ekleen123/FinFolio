@@ -10,6 +10,7 @@ FinFolio is a sleek stock portfolio tracker that allows users to:
 ## 📸 Screenshots:
 <img width="1914" height="882" alt="Screenshot 2025-07-07 041237" src="https://github.com/user-attachments/assets/43b5c9d1-9220-479b-ae10-22e8f6969703" />
 <img width="1899" height="862" alt="Screenshot 2025-07-07 041343" src="https://github.com/user-attachments/assets/425020ad-3fa1-4add-9bd1-cc473158e44a" />
+- working demo:
 https://github.com/user-attachments/assets/146786a1-5bce-4c12-a03b-6269798026cb
 
 ## 🚀 Features
